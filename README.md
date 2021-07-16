@@ -31,8 +31,13 @@ After download all required software, you need to make your own copy of `.env.ex
 
 Variables to set:  
 - Database(DB_):  
+If you use PostgreSQL, probably you don't need to change them. Just make sure you named your db as in `.env.exaple` file, and you have the same username and password. You can check if db connection work using command 
+`php artisan migrate:install`. After it, you should have a database table named migrations in your database. If not, you should check if you don't have comment `extension=pdo_pgsql`, `extension=pgsql` and `extension=curl`  in your php.ini file.
 
-    If you use PostgreSQL, probably you don't need to change them. Just make sure you named your db as in `.env.exaple` file, and you have the same username and password. You can check if db connection work using command 
-    `php artisan migrate:install`. After it, you should have a database table named migrations in your database. If not, you should check if you don't have comment `extension=pdo_pgsql`, `extension=pgsql` and `extension=curl`  in your php.ini file.
+- Swagger  
 
+    L5_SWAGGER_GENERATE_ALWAYS - default is set to true. It is auto generate swagger docs, otherwise you must use the php artisan l5-swagger:generate command to generate newly added documentation. If you don't know how to documents models and controllers with swagger you can check it under these links:  
+    - https://github.com/zircote/swagger-php/tree/master/Examples/petstore.swagger.io
+    - https://zircote.github.io/swagger-php/#links 
 
+    You can view swagger auto generated docs by passing \<host>:\<port>/api/docs into your web browser. By default host is localhost and port is 8000.
