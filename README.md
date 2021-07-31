@@ -41,3 +41,7 @@ If you use PostgreSQL, probably you don't need to change them. Just make sure yo
     - https://zircote.github.io/swagger-php/#links 
 
     You can view swagger auto generated docs by passing \<host>:\<port>/api/docs into your web browser. By default host is localhost and port is 8000.
+
+# Environment variables
+
+- Laravel Query Detector (https://github.com/beyondcode/laravel-query-detector)
