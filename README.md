@@ -45,3 +45,7 @@ If you use PostgreSQL, probably you don't need to change them. Just make sure yo
 # Dev tools
 
 - Laravel Debugbar (https://github.com/barryvdh/laravel-debugbar). It works only when in .env `APP_DEBUG=true`.
+
+# Environment variables
+
+- Laravel Query Detector (https://github.com/beyondcode/laravel-query-detector)
