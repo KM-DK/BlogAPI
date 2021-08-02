@@ -42,6 +42,10 @@ If you use PostgreSQL, probably you don't need to change them. Just make sure yo
 
     You can view swagger auto generated docs by passing \<host>:\<port>/api/docs into your web browser. By default host is localhost and port is 8000.
 
+# Dev tools
+
+- Laravel Debugbar (https://github.com/barryvdh/laravel-debugbar). It works only when in .env `APP_DEBUG=true`.
+
 # Environment variables
 
 - Laravel Query Detector (https://github.com/beyondcode/laravel-query-detector)
