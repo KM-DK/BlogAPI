@@ -262,16 +262,14 @@
                     "surname": {
                         "type": "string"
                     },
+                    "password": {
+                        "type": "string"
+                    },
+                    "role_id": {},
                     "account_name": {
                         "type": "string"
                     },
                     "email": {
-                        "type": "string"
-                    },
-                    "created_at": {
-                        "type": "string"
-                    },
-                    "updated_at": {
                         "type": "string"
                     }
                 },
@@ -291,6 +289,7 @@
                     "email": {
                         "type": "string"
                     },
+                    "role_id": {},
                     "created_at": {
                         "type": "string"
                     },

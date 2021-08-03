@@ -17,8 +17,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @OA\Property(property="updated_at",type="string")
  * )
  */
-class UserResource extends JsonResource {
-    public function toArray($request) {
+class UserResource extends JsonResource
+{
+    public function toArray($request)
+    {
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -38,18 +40,21 @@ class UserResource extends JsonResource {
  * schema="StoreUserResource",
  * @OA\Property(property="name", type="string"),
  * @OA\Property(property="surname", type="string"),
+ * @OA\Property(property="password", type="string"),
+ * @OA\Property(property="role_id"),
  * @OA\Property(property="account_name", type="string"),
  * @OA\Property(property="email",type="string")
  * )
  */
 
- /**
+/**
  * @OA\Schema(
  * schema="UpdateUserResource",
  * @OA\Property(property="name", type="string"),
  * @OA\Property(property="surname", type="string"),
  * @OA\Property(property="account_name", type="string"),
  * @OA\Property(property="email",type="string"),
+ * @OA\Property(property="role_id"),
  * @OA\Property(property="created_at",type="string"),
  * @OA\Property(property="updated_at",type="string")
  * )

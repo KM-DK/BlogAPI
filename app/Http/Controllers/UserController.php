@@ -4,10 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
+use App\Models\Dictionary;
+use App\Models\DictionaryTerm;
 use App\Models\User;
+use Illuminate\Bus\Dispatcher;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
-class UserController extends Controller {
+class UserController extends Controller
+{
 
     /**
      * @OA\Get(
@@ -31,7 +36,8 @@ class UserController extends Controller {
      *      )
      *     )
      */
-    public function index() {
+    public function index()
+    {
         return new UserCollection(User::All());
     }
 
@@ -65,8 +71,16 @@ class UserController extends Controller {
      *      )
      * )
      */
-    public function store(Request $request) {
-        return User::create($request->all());
+    public function store(Request $request)
+    {
+        $role_id = $request->input("role_id") != null ? $request->input("role_id") : 3;
+        $role = DictionaryTerm::findOrFail($role_id);
+        if (Dictionary::isRole($role)) {
+            return response('Bad request', 400);
+        }
+        $user = new User($request->except("role_id"));
+        $user->role = $role;
+        return User::create($user);
     }
 
     /**
@@ -104,7 +118,8 @@ class UserController extends Controller {
      *      )
      * )
      */
-    public function show($id) {
+    public function show($id)
+    {
         return new UserResource(User::findOrFail($id));
     }
 
@@ -151,7 +166,8 @@ class UserController extends Controller {
      *      )
      * )
      */
-    public function update(Request $request, $id) {
+    public function update(Request $request, $id)
+    {
         $user = User::findOrFail($id);
         $user->update($request->all());
 
@@ -193,7 +209,8 @@ class UserController extends Controller {
      *      )
      * )
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $user = User::findOrFail($id);
         $user->delete();
         return 204;
