@@ -20,15 +20,19 @@ use Illuminate\Routing\Controller as BaseController;
  *         url="http://www.apache.org/licenses/LICENSE-2.0.html"
  *     )
  * )
- */
-
- /**
- * @OA\Get(
- *     path="/api/resource.json",
- *     @OA\Response(response="200", description="An example resource")
+ * @OA\Server(
+ *        description="OpenApi host",
+ *        url="http://localhost:8000/api"
  * )
  */
-class Controller extends BaseController
-{
+
+class Controller extends BaseController {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 }
+
+/**
+ * @OA\Tag(
+ *     name="Users",
+ *     description="API Endpoints of User"
+ * )
+ */
