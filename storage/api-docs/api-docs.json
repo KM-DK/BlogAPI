@@ -248,6 +248,9 @@
                     "created_at": {
                         "type": "string"
                     },
+                    "role": {
+                        "$ref": "#/components/schemas/Role"
+                    },
                     "updated_at": {
                         "type": "string"
                     }
@@ -265,7 +268,9 @@
                     "password": {
                         "type": "string"
                     },
-                    "role_id": {},
+                    "role_id": {
+                        "type": "integer"
+                    },
                     "account_name": {
                         "type": "string"
                     },
@@ -289,12 +294,28 @@
                     "email": {
                         "type": "string"
                     },
-                    "role_id": {},
+                    "role_id": {
+                        "type": "integer"
+                    },
                     "created_at": {
                         "type": "string"
                     },
                     "updated_at": {
                         "type": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Role": {
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "dictionary_id": {
+                        "type": "integer"
                     }
                 },
                 "type": "object"

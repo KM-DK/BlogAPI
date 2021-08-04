@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\DictionaryTerm;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -14,6 +15,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @OA\Property(property="email_verified_at",type="string"),
  * @OA\Property(property="is_active",type="boolean"),
  * @OA\Property(property="created_at",type="string"),
+ * @OA\Property(property="role", type="object", ref="#/components/schemas/Role"),
  * @OA\Property(property="updated_at",type="string")
  * )
  */
@@ -29,6 +31,7 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'email_verified_at' => $this->email_verified_at,
             'is_active' => $this->is_active,
+            'role' => DictionaryTerm::findOrFail($this->role_id),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
@@ -41,9 +44,9 @@ class UserResource extends JsonResource
  * @OA\Property(property="name", type="string"),
  * @OA\Property(property="surname", type="string"),
  * @OA\Property(property="password", type="string"),
- * @OA\Property(property="role_id"),
+ * @OA\Property(property="role_id", type="integer"),
  * @OA\Property(property="account_name", type="string"),
- * @OA\Property(property="email",type="string")
+ * @OA\Property(property="email", type="string")
  * )
  */
 
@@ -53,9 +56,9 @@ class UserResource extends JsonResource
  * @OA\Property(property="name", type="string"),
  * @OA\Property(property="surname", type="string"),
  * @OA\Property(property="account_name", type="string"),
- * @OA\Property(property="email",type="string"),
- * @OA\Property(property="role_id"),
- * @OA\Property(property="created_at",type="string"),
- * @OA\Property(property="updated_at",type="string")
+ * @OA\Property(property="email", type="string"),
+ * @OA\Property(property="role_id", type="integer"),
+ * @OA\Property(property="created_at", type="string"),
+ * @OA\Property(property="updated_at", type="string")
  * )
  */

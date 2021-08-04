@@ -7,6 +7,7 @@ use App\Http\Resources\UserResource;
 use App\Models\Dictionary;
 use App\Models\DictionaryTerm;
 use App\Models\User;
+use DateTime;
 use Illuminate\Bus\Dispatcher;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
@@ -73,14 +74,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $role_id = $request->input("role_id") != null ? $request->input("role_id") : 3;
-        $role = DictionaryTerm::findOrFail($role_id);
-        if (Dictionary::isRole($role)) {
+        $user_role_id = 3;
+        $role_id = $request->input("role_id") != null ?
+            $request->input("role_id") : $user_role_id;
+        if (!$this->checkRole($role_id)) {
             return response('Bad request', 400);
         }
-        $user = new User($request->except("role_id"));
-        $user->role = $role;
-        return User::create($user);
+        $user = new User($request->all());
+        $user->role_id = $role_id;
+        return $user->save();
     }
 
     /**
@@ -166,11 +168,17 @@ class UserController extends Controller
      *      )
      * )
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $user = User::findOrFail($id);
+        $role_id = $request->input("role_id");
+        if (!$this->checkRole($role_id)) {
+            return response('Bad request', 400);
+        }
+        if ($role_id != null) {
+            $user->role_id = $role_id;
+        }
         $user->update($request->all());
-
         return new UserResource($user);
     }
 
@@ -214,5 +222,14 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
         return 204;
+    }
+
+    private function checkRole($role_id): bool
+    {
+        $role = DictionaryTerm::findOrFail($role_id);
+        if (Dictionary::isRole($role)) {
+            return false;
+        }
+        return true;
     }
 }

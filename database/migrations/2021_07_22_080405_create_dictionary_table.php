@@ -13,12 +13,12 @@ class CreateDictionaryTable extends Migration
      */
     public function up()
     {
-        Schema::create('dictionary', function (Blueprint $table) {
+        Schema::create('dictionaries', function (Blueprint $table) {
             $table->id();
             $table->string("key")->unique();
         });
 
-        Schema::create('dictionary_term', function (Blueprint $table) {
+        Schema::create('dictionary_terms', function (Blueprint $table) {
             $table->id();
             $table->string("value")->unique();
             $table->foreignId("dictionary_id");

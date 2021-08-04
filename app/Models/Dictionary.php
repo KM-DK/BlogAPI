@@ -9,15 +9,14 @@ class Dictionary extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id';
-    protected String $key;
     public function terms()
     {
         return $this->hasMany(DictionaryTerm::class);
     }
 
-    public static function isRole(DictionaryTerm $role): bool
+    public static function isRole($role): bool
     {
-        return $role->key->key == "role";
+        return $role->key == "role";
     }
 }
+
