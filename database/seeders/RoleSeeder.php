@@ -2,6 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Enums\DictionaryKey;
+use App\Enums\UserType;
+use App\Models\DictionaryTerm;
+use App\Models\Dictionary;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -10,24 +14,23 @@ class RoleSeeder extends Seeder
 
     public function run()
     {
-        DB::table('dictionaries')->insert([
-            'id' => 1,
-            'key' => "role"
+        Dictionary::factory()->create([
+            'key' => DictionaryKey::getKey(DictionaryKey::ROLE)
         ]);
 
-        DB::table('dictionary_terms')->insert([
-            'value' => "Admin",
-            'dictionary_id' => 1
+        DictionaryTerm::factory()->create([
+            'value' => UserType::getKey(UserType::ADMIN),
+            'dictionary_id' => UserType::ADMIN
         ]);
 
-        DB::table('dictionary_terms')->insert([
-            'value' => "Mod",
-            'dictionary_id' => 1
+        DictionaryTerm::factory()->create([
+            'value' => UserType::getKey(UserType::MOD),
+            'dictionary_id' => DictionaryKey::ROLE
         ]);
 
-        DB::table('dictionary_terms')->insert([
-            'value' => "User",
-            'dictionary_id' => 1
+        DictionaryTerm::factory()->create([
+            'value' => UserType::getKey(UserType::USER),
+            'dictionary_id' => DictionaryKey::ROLE
         ]);
     }
 }

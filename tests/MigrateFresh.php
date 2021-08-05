@@ -2,7 +2,7 @@
 namespace Tests;
 use Illuminate\Support\Facades\Artisan;
 
-trait MigrateFreshSeedOnce{
+trait MigrateFresh{
     /**
     * If true, setup has run at least once.
     * @var boolean
@@ -16,9 +16,6 @@ trait MigrateFreshSeedOnce{
         parent::setUp();
         if (!static::$setUpHasRunOnce) {
             Artisan::call('migrate:fresh');
-            Artisan::call(
-                'db:seed', ['--class' => 'RoleSeeder']
-            );
             static::$setUpHasRunOnce = true;
          }
     }

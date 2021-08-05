@@ -7,10 +7,10 @@ use App\Http\Resources\UserResource;
 use App\Models\Dictionary;
 use App\Models\DictionaryTerm;
 use App\Models\User;
-use DateTime;
-use Illuminate\Bus\Dispatcher;
+use App\Enum\UserType;
+use App\Enums\StatusCode;
+use App\Enums\UserType as EnumsUserType;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserController extends Controller
 {
@@ -74,15 +74,12 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user_role_id = 3;
-        $role_id = $request->input("role_id") != null ?
-            $request->input("role_id") : $user_role_id;
-        if (!$this->checkRole($role_id)) {
-            return response('Bad request', 400);
+        $role_id = $request->input("role_id") ??
+            EnumsUserType::USER_ROLE_ID;
+        if (!$this->checkIfRole($role_id)) {
+            return abort(400);
         }
-        $user = new User($request->all());
-        $user->role_id = $role_id;
-        return $user->save();
+        return new UserResource(User::create($request->all()));
     }
 
     /**
@@ -146,7 +143,7 @@ class UserController extends Controller
      *          @OA\JsonContent(ref="#/components/schemas/UpdateUserResource")
      *      ),
      *      @OA\Response(
-     *          response=202,
+     *          response=200,
      *          description="Successful operation",
      *          @OA\JsonContent(ref="#/components/schemas/UserResource")
      *       ),
@@ -170,16 +167,11 @@ class UserController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        $user = User::findOrFail($id);
         $role_id = $request->input("role_id");
-        if (!$this->checkRole($role_id)) {
-            return response('Bad request', 400);
+        if (!$this->checkIfRole($role_id)) {
+            return abort(StatusCode::BAD_REQUEST);
         }
-        if ($role_id != null) {
-            $user->role_id = $role_id;
-        }
-        $user->update($request->all());
-        return new UserResource($user);
+        return User::where('id', $id)->update($request->all());
     }
 
     /**
@@ -217,19 +209,20 @@ class UserController extends Controller
      *      )
      * )
      */
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $user = User::findOrFail($id);
         $user->delete();
-        return 204;
+        return abort(StatusCode::DELETED);
     }
 
-    private function checkRole($role_id): bool
+    private function checkIfRole($role_id): bool
     {
         $role = DictionaryTerm::findOrFail($role_id);
+
         if (Dictionary::isRole($role)) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 }

@@ -9,7 +9,8 @@ class DictionaryTerm extends Model
 {
     use HasFactory;
 
-    protected String $value;
+    public $timestamps = false;
+
     public function key()
     {
         return $this->belongsTo(Dictionary::class, 'dictionary_id');
