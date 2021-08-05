@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable {
+class User extends Authenticatable
+{
     use HasFactory, Notifiable;
 
     protected $fillable = [
@@ -31,7 +32,8 @@ class User extends Authenticatable {
         'is_active' => false,
     ];
 
-    public function role() {
-        return $this->hasOne(DictionaryTerm::class);
+    public function role()
+    {
+        return $this->belongsTo(DictionaryTerm::class);
     }
 }
