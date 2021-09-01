@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
-use App\Models\Dictionary;
-use App\Models\DictionaryTerm;
+
 use App\Models\User;
-use App\Enum\UserType;
 use App\Enums\StatusCode;
-use App\Enums\UserType as EnumsUserType;
-use Illuminate\Http\Request;
+use App\Enums\UserType;
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -72,13 +72,11 @@ class UserController extends Controller
      *      )
      * )
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
-        $role_id = $request->input("role_id") ??
-            EnumsUserType::USER_ROLE_ID;
-        if (!$this->checkIfRole($role_id)) {
-            return abort(400);
-        }
+        $request->role_id = $request->role_id ??
+            UserType::USER;
+        $request->password = Hash::make($request->password);
         return new UserResource(User::create($request->all()));
     }
 
@@ -117,9 +115,9 @@ class UserController extends Controller
      *      )
      * )
      */
-    public function show($id)
+    public function show(User $user)
     {
-        return new UserResource(User::findOrFail($id));
+        return new UserResource($user);
     }
 
     /**
@@ -165,13 +163,9 @@ class UserController extends Controller
      *      )
      * )
      */
-    public function update(Request $request, int $id)
+    public function update(User $user, UserUpdateRequest $request)
     {
-        $role_id = $request->input("role_id");
-        if (!$this->checkIfRole($role_id)) {
-            return abort(StatusCode::BAD_REQUEST);
-        }
-        return User::where('id', $id)->update($request->all());
+        return $user->update($request->all());
     }
 
     /**
@@ -209,20 +203,9 @@ class UserController extends Controller
      *      )
      * )
      */
-    public function destroy(int $id)
+    public function destroy(User $user)
     {
-        $user = User::findOrFail($id);
         $user->delete();
         return abort(StatusCode::DELETED);
-    }
-
-    private function checkIfRole($role_id): bool
-    {
-        $role = DictionaryTerm::findOrFail($role_id);
-
-        if (Dictionary::isRole($role)) {
-            return true;
-        }
-        return false;
     }
 }

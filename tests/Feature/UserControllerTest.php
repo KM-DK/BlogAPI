@@ -10,7 +10,6 @@ use App\Enums\UserType;
 use Tests\TestCase;
 use Tests\CreatesApplication;
 use Tests\MigrateFresh;
-use Illuminate\Support\Facades\DB;
 
 class UserTest extends TestCase
 {
@@ -19,7 +18,7 @@ class UserTest extends TestCase
 
     private const TABLE = 'users';
     private const USER_ID = 1;
-    private const BASE_PATH = "api/users";
+    private const BASE_PATH = 'api/users';
 
     public function test_create_user()
     {
@@ -46,10 +45,8 @@ class UserTest extends TestCase
 
     public function test_change_user_role()
     {
-        $role_id = UserType::MOD;
-        $user_id = UserTest::USER_ID;
-        $this->updateUser($user_id, ['role_id' => $role_id]);
-        $user = User::find($user_id);
+        $this->updateUser(UserTest::USER_ID, ['role_id' => UserType::MOD]);
+        $user = User::find(UserTest::USER_ID);
         $this->assertNotNull($user);
         $exceptedRole = UserType::getKey(UserType::MOD);
         $this->assertEquals($exceptedRole, $user->role->value);
@@ -83,32 +80,36 @@ class UserTest extends TestCase
     public function test_do_not_create_user_due_to_bad_dict_term_id()
     {
         $not_role_key_id = 2;
-        $dictionary = Dictionary::factory()->create(["key" => "tmp"]);
+        $dictionary = Dictionary::factory()->create(['key' => 'tmp']);
         DictionaryTerm::factory()->create(['dictionary_id' => $dictionary->id]);
         $dict_term_id = 4;
         $this->createUser(
             role_id: $dict_term_id,
-            status: StatusCode::BAD_REQUEST
+            status: StatusCode::UNPROCESSABLE_ENTITY
         );
     }
+
     private function createUser(
-        $name = "Sally",
-        $surname = "Sullivan",
-        $account_name = "Tomek",
-        $email = "sally.sullivan@gmail.com",
-        $password = "123456",
+        $name = 'Sally',
+        $surname = 'Sullivan',
+        $account_name = 'Tomek',
+        $email = 'sally.sullivan@gmail.com',
+        $password = '123456789',
         $role_id = 3,
         $status = StatusCode::CREATED
     ) {
         $response = $this->post(
             UserTest::BASE_PATH,
             [
-                "name" => $name,
-                "surname" => $surname,
-                "account_name" => $account_name,
-                "email" => $email,
-                "password" => $password,
-                "role_id" => $role_id
+                'name' => $name,
+                'surname' => $surname,
+                'account_name' => $account_name,
+                'email' => $email,
+                'password' => $password,
+                'role_id' => $role_id
+            ],
+            [
+                'Accept' => 'application/json'
             ]
         );
         $response->assertStatus($status);
@@ -124,11 +125,11 @@ class UserTest extends TestCase
 
     /**
      * Optional array can have keys like
-     *   "name", "surname", "account_name", "email", "role_id"
+     *   'name', 'surname', 'account_name', 'email', 'role_id'
      */
     private function updateUser(int $id, array $optional, int $status = StatusCode::OK)
     {
-        $response = $this->put(UserTest::BASE_PATH . '/' . $id, $optional);
+        $response = $this->patch(UserTest::BASE_PATH . '/' . $id, $optional);
         $response->assertStatus($status);
         return $response;
     }
