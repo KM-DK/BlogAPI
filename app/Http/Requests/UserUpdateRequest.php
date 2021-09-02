@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Rules\IsRole;
-
+use App\Rules\ValidPassword;
 
 class UserUpdateRequest extends FormRequest
 {
@@ -28,9 +28,11 @@ class UserUpdateRequest extends FormRequest
         return [
             'role_id' => [new IsRole],
             'email' => 'email:rfc,dns',
-            //TODO
-            //Validate if password has one big letter, one number and special character
-            'password' => 'min:8|max:69|',
+            'password' => [
+                'min:8',
+                'max:69',
+                new ValidPassword
+            ],
             'name' => 'min:1|max:20',
             'surname' => 'min:1|max:100',
             'account_name' => 'min:3|max:20'
