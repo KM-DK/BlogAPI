@@ -94,7 +94,7 @@ class UserTest extends TestCase
         $surname = 'Sullivan',
         $account_name = 'Tomek',
         $email = 'sally.sullivan@gmail.com',
-        $password = '123456789',
+        $password = '5=4,3m$7UaY=.Lcy',
         $role_id = 3,
         $status = StatusCode::CREATED
     ) {
