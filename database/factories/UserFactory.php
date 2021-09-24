@@ -3,44 +3,65 @@
 namespace Database\Factories;
 
 use App\Models\User;
+use App\Enums\UserType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class UserFactory extends Factory
 {
-    /**
-     * The name of the factory's corresponding model.
-     *
-     * @var string
-     */
+
     protected $model = User::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array
-     */
+    const PASSWORD = 'admin';
+
     public function definition()
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
+            'name' => $this->faker
+                ->firstName(),
+            'surname' => $this->faker
+                ->lastName(),
+            'account_name' => $this->faker
+                ->unique()
+                ->colorName(),
+            'email' => $this->faker
+                ->unique()
+                ->safeEmail(),
+            'role_id' => UserType::USER,
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'is_active' => true,
+            'password' => Hash::make(UserFactory::PASSWORD),
             'remember_token' => Str::random(10),
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     *
-     * @return \Illuminate\Database\Eloquent\Factories\Factory
-     */
     public function unverified()
     {
         return $this->state(function (array $attributes) {
             return [
                 'email_verified_at' => null,
+                'is_active' => false
+            ];
+        });
+    }
+
+    public function admin()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'account_name' => strtolower(UserType::getKey(UserType::ADMIN)),
+                'role_id' => UserType::ADMIN,
+            ];
+        });
+    }
+
+    public function moderator()
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'account_name' => strtolower(UserType::getKey(UserType::MOD)),
+                'role_id' => UserType::MOD,
             ];
         });
     }
